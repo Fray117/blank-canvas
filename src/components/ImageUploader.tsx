@@ -1,11 +1,49 @@
 import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
+import { useDropzone } from 'react-dropzone'
 
-export default function ImageUploader({ toggleWindow, setColor }: { toggleWindow: Dispatch<SetStateAction<boolean>>, setColor: Dispatch<SetStateAction<string>> }) {
-	const updateColor = (color: string) => {
-		setColor(color)
+type MarkupElements = { shape: boolean, class: string }[]
+
+export default function ImageUploader({
+	toggleWindow,
+	updateElements,
+	setPosition,
+	markupElements
+}: {
+	toggleWindow: Dispatch<SetStateAction<boolean>>,
+	updateElements: Dispatch<SetStateAction<MarkupElements>>,
+	setPosition: Dispatch<SetStateAction<{
+		x: number,
+		y: number
+	}>>,
+	markupElements: MarkupElements
+}) {
+	const onDrop = useCallback((acceptedFiles: File[]) => {
+		setPosition({ x: 0, y: 0 })
+
+		updateElements([
+			...markupElements,
+			{
+				shape: true,
+				class: `bg-[${URL.createObjectURL(acceptedFiles[0])}]`,
+			}
+		])
+
 		toggleWindow(false)
-	}
+	}, [])
+
+	const {
+		getRootProps,
+		getInputProps,
+		isFocused,
+		isDragAccept,
+		isDragReject
+	} = useDropzone({ onDrop, accept: { 'image/*': [] }, maxFiles: 1 })
+
+	const dropClass = useMemo(() => {
+		return `w-64 h-64 rounded-lg border-dashed border-2 text-gray-800 flex flex-col justify-center items-center h-full ${isFocused ? 'border-gray-400' : 'border-gray-800'}`
+	}, [isFocused])
+
 	return (
 		<div className="absolute z-10 top-0 left-0 min-h-screen w-screen flex justify-center items-center">
 			<div className="w-full h-full absolute z-0" onClick={() => toggleWindow(false)}></div>
@@ -16,8 +54,9 @@ export default function ImageUploader({ toggleWindow, setColor }: { toggleWindow
 						<XMarkIcon className="h-4 w-4 text-gray-800 hover:text-gray-400 cursor-pointer" />
 					</div>
 				</div>
-				<div className="w-64 h-64 rounded-lg border-dashed border-2 border-gray-800 flex flex-col justify-center items-center text-gray-800">
+				<div {...getRootProps()} className={dropClass}>
 					<PhotoIcon className="h-12 w-12" />
+					<input {...getInputProps()} />
 					<span>Drop image here</span>
 				</div>
 			</div>
