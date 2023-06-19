@@ -34,6 +34,8 @@ export default function Home() {
 			y: e.clientY
 		})
 
+		if (e.currentTarget !== e.target) return
+
 		if ((activeDrags < 1) && (tool > 0) && !colorWindow) {
 			updateElements([
 				...markupElements,
@@ -62,8 +64,7 @@ export default function Home() {
 
 	return (
 		<main
-			className={`min-h-screen relative px-24 py-12 z-0 ${inter.className} ${CURSOR_TYPE[tool]}`}
-			onClick={updatePosition}
+			className={`min-h-screen relative px-24 py-12 ${inter.className} ${CURSOR_TYPE[tool]}`}
 		>
 			<SideBar toggleColorWindow={toggleColor} setTool={setTool} colorWindow={colorWindow} />
 
@@ -91,7 +92,7 @@ export default function Home() {
 			<div className="flex justify-center">
 				Place object should active? {placeObject ? 'yes' : 'no'}
 			</div>
-			<div className="absolute top-0 left-0 min-h-screen w-screen">
+			<div className="absolute top-0 left-0 min-h-screen w-screen" onClick={updatePosition}>
 				{
 					markupElements.map((element, index) => (
 						<Draggable key={index} onStart={onStart} onStop={onStop} defaultPosition={position}>
