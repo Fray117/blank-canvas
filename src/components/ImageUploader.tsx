@@ -2,7 +2,7 @@ import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-type MarkupElements = { shape: boolean, class: string }[]
+type MarkupElements = { shape: boolean, class: string, source: string }[]
 
 export default function ImageUploader({
 	toggleWindow,
@@ -19,13 +19,12 @@ export default function ImageUploader({
 	markupElements: MarkupElements
 }) {
 	const onDrop = useCallback((acceptedFiles: File[]) => {
-		setPosition({ x: 0, y: 0 })
-
 		updateElements([
 			...markupElements,
 			{
 				shape: true,
-				class: `bg-[${URL.createObjectURL(acceptedFiles[0])}]`,
+				class: `bg-transparent select-none`,
+				source: URL.createObjectURL(acceptedFiles[0]),
 			}
 		])
 
@@ -36,9 +35,7 @@ export default function ImageUploader({
 		getRootProps,
 		getInputProps,
 		isFocused,
-		isDragAccept,
-		isDragReject
-	} = useDropzone({ onDrop, accept: { 'image/*': [] }, maxFiles: 1 })
+	} = useDropzone({ onDrop, accept: { 'image/*': [] } })
 
 	const dropClass = useMemo(() => {
 		return `w-64 h-64 rounded-lg border-dashed border-2 text-gray-800 flex flex-col justify-center items-center h-full ${isFocused ? 'border-gray-400' : 'border-gray-800'}`

@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useState, MouseEvent } from 'react'
 
@@ -24,7 +23,7 @@ export default function Home() {
 	const [color, setColor] = useState<string>("bg-white text-white")
 	const [position, setPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
 
-	const [markupElements, updateElements] = useState<{ shape: boolean, class: string }[]>([])
+	const [markupElements, updateElements] = useState<{ shape: boolean, class: string, source: string }[]>([])
 
 	const [placeObject, togglePlaceObject] = useState<boolean>(false)
 
@@ -46,6 +45,7 @@ export default function Home() {
 						{
 							shape: false,
 							class: `${color} h-6 bg-transparent`,
+							source: ''
 						}
 					])
 					break
@@ -56,6 +56,7 @@ export default function Home() {
 						{
 							shape: true,
 							class: `${color} h-6 w-6`,
+							source: ''
 						}
 					])
 					break
@@ -95,7 +96,7 @@ export default function Home() {
 
 			{
 				uploadWindow && <ImageUploader
-					toggleWindow={toggleColor}
+					toggleWindow={toggleUpload}
 					updateElements={updateElements}
 					markupElements={markupElements}
 					setPosition={setPosition} />
