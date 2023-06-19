@@ -40,8 +40,8 @@ export default function Home() {
 			updateElements([
 				...markupElements,
 				{
-					shape: true,
-					class: `${color} h-6 w-6`,
+					shape: tool === 3,
+					class: `${color} h-6 ${(tool === 2) ? 'bg-transparent' : 'w-6'}`,
 				}
 			])
 
