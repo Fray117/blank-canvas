@@ -15,6 +15,8 @@ const CURSOR_TYPE: string[] = [
 	"cursor-crosshair",
 ]
 
+const DEBUG_STATS: boolean = true
+
 export default function Home() {
 	const [tool, setTool] = useState<number>(0)
 	const [activeDrags, setActiveDrags] = useState<number>(0)
@@ -28,15 +30,30 @@ export default function Home() {
 
 	const [placeObject, togglePlaceObject] = useState<boolean>(false)
 
+	const [mouseHold, toggleMousehold] = useState<boolean>(false)
+
 	const updatePosition = (e: MouseEvent) => {
 		setPosition({
 			x: e.clientX,
 			y: e.clientY
 		})
+
+		if (tool === 1 && !colorWindow && (activeDrags < 1) && mouseHold) {
+			updateElements([
+				...markupElements,
+				{
+					shape: false,
+					class: `${color} w-6 h-6`,
+					source: ''
+				}
+			])
+		}
 	}
 
 	const makeElement = (e: MouseEvent) => {
 		if (e.currentTarget !== e.target) return
+
+		toggleMousehold(true)
 
 		if ((activeDrags < 1) && (tool > 0) && !colorWindow) {
 			switch (tool) {
@@ -68,6 +85,10 @@ export default function Home() {
 				togglePlaceObject(false)
 			}, 1000)
 		}
+	}
+
+	const releaseMouse = () => {
+		toggleMousehold(false)
 	}
 
 	const onStart = () => {
@@ -104,28 +125,34 @@ export default function Home() {
 					setPosition={setPosition} />
 			}
 
-			<div className="flex justify-center">
-				State: {tool}
-			</div>
-			<div className="flex justify-center">
-				Color Picker: {colorWindow ? 'true' : 'false'}
-			</div>
-			<div className="flex justify-center">
-				Image Uploader: {uploadWindow ? 'true' : 'false'}
-			</div>
-			<div className="flex justify-center">
-				Dragged Object: {activeDrags}
-			</div>
-			<div className="flex justify-center">
-				Target Position: {JSON.stringify(position)}
-			</div>
-			<div className="flex justify-center">
-				Place object should active? {placeObject ? 'yes' : 'no'}
-			</div>
-			<div className="flex justify-center">
-				{markupElements.length} elements
-			</div>
-			<div className="absolute top-0 left-0 min-h-screen w-screen" onMouseDown={makeElement} onMouseMove={updatePosition}>
+			{
+				DEBUG_STATS &&
+				<>
+					<div className="flex justify-center">
+						State: {tool}
+					</div>
+					<div className="flex justify-center">
+						Color Picker: {colorWindow ? 'true' : 'false'}
+					</div>
+					<div className="flex justify-center">
+						Image Uploader: {uploadWindow ? 'true' : 'false'}
+					</div>
+					<div className="flex justify-center">
+						Dragged Object: {activeDrags}
+					</div>
+					<div className="flex justify-center">
+						Target Position: {JSON.stringify(position)}
+					</div>
+					<div className="flex justify-center">
+						Place object should active? {placeObject ? 'yes' : 'no'}
+					</div>
+					<div className="flex justify-center">
+						{markupElements.length} elements
+					</div>
+				</>
+			}
+
+			<div className="absolute top-0 left-0 min-h-screen w-screen" onMouseDown={makeElement} onMouseMove={updatePosition} onMouseUp={releaseMouse}>
 				{
 					markupElements.map((element, index) => (
 						<CanvasElement key={index} data={element} onStart={onStart} onStop={onStop} position={position} />
