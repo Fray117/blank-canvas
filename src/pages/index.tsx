@@ -20,6 +20,7 @@ export default function Home() {
 	const [activeDrags, setActiveDrags] = useState<number>(0)
 	const [colorWindow, toggleColor] = useState<boolean>(false)
 	const [uploadWindow, toggleUpload] = useState<boolean>(false)
+	const [shape, setShape] = useState<number>(0)
 	const [color, setColor] = useState<string>("bg-white text-white")
 	const [position, setPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 })
 
@@ -55,7 +56,7 @@ export default function Home() {
 						...markupElements,
 						{
 							shape: true,
-							class: `${color} h-6 w-6`,
+							class: `${color} ${shape === 1 ? 'rounded-full' : ''} h-6 w-6`,
 							source: ''
 						}
 					])
@@ -88,7 +89,8 @@ export default function Home() {
 				toggleUploadWindow={toggleUpload}
 				setTool={setTool}
 				colorWindow={colorWindow}
-				uploadWindow={uploadWindow} />
+				uploadWindow={uploadWindow}
+				setShape={setShape} />
 
 			{
 				colorWindow && <ColorPicker toggleWindow={toggleColor} setColor={setColor} />
