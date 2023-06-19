@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useState, MouseEvent } from 'react'
-import Draggable from 'react-draggable'
 
 import ColorPicker from '@/components/ColorPicker'
 import SideBar from '@/components/SideBar'
@@ -95,9 +94,12 @@ export default function Home() {
 			}
 
 			{
-				uploadWindow && <ImageUploader toggleWindow={toggleColor} setColor={setColor} />
+				uploadWindow && <ImageUploader
+					toggleWindow={toggleColor}
+					updateElements={updateElements}
+					markupElements={markupElements}
+					setPosition={setPosition} />
 			}
-
 
 			<div className="flex justify-center">
 				State: {tool}
@@ -123,11 +125,7 @@ export default function Home() {
 			<div className="absolute top-0 left-0 min-h-screen w-screen" onMouseDown={makeElement} onMouseMove={updatePosition}>
 				{
 					markupElements.map((element, index) => (
-						<Draggable key={index} onStart={onStart} onStop={onStop} defaultPosition={position}>
-							<div className="fixed">
-								<CanvasElement data={element} />
-							</div>
-						</Draggable>
+						<CanvasElement key={index} data={element} onStart={onStart} onStop={onStop} position={position} />
 					))
 				}
 			</div>
