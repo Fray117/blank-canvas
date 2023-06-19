@@ -2,18 +2,19 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useState, MouseEvent } from 'react'
 import Draggable from 'react-draggable'
+
 import ColorPicker from '@/components/ColorPicker'
 import SideBar from '@/components/SideBar'
 import CanvasElement from '@/components/CanvasElement'
+import ImageUploader from '@/components/ImageUploader'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const CURSOR_TYPE: string[] = [
 	"cursor-default",
-	"cursor-pointer",
+	"cursor-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0idy01IGgtNSI+IDxwYXRoIGQ9Ik0yLjY5NSAxNC43NjNsLTEuMjYyIDMuMTU0YS41LjUgMCAwMC42NS42NWwzLjE1NS0xLjI2MmE0IDQgMCAwMDEuMzQzLS44ODVMMTcuNSA1LjVhMi4xMjEgMi4xMjEgMCAwMC0zLTNMMy41OCAxMy40MmE0IDQgMCAwMC0uODg1IDEuMzQzeiIgLz4gPC9zdmc+'),_crosshair]",
 	"cursor-text",
-	"cursor-pointer",
-	"cursor-pointer",
+	"cursor-crosshair",
 ]
 
 export default function Home() {
@@ -33,17 +34,33 @@ export default function Home() {
 			x: e.clientX,
 			y: e.clientY
 		})
+	}
 
+	const makeElement = (e: MouseEvent) => {
 		if (e.currentTarget !== e.target) return
 
 		if ((activeDrags < 1) && (tool > 0) && !colorWindow) {
-			updateElements([
-				...markupElements,
-				{
-					shape: tool === 3,
-					class: `${color} h-6 ${(tool === 2) ? 'bg-transparent' : 'w-6'}`,
-				}
-			])
+			switch (tool) {
+				case 2:
+					updateElements([
+						...markupElements,
+						{
+							shape: false,
+							class: `${color} h-6 bg-transparent`,
+						}
+					])
+					break
+				case 3:
+				default:
+					updateElements([
+						...markupElements,
+						{
+							shape: true,
+							class: `${color} h-6 w-6`,
+						}
+					])
+					break
+			}
 
 			togglePlaceObject(true)
 			setTimeout(() => {
@@ -66,14 +83,19 @@ export default function Home() {
 		<main
 			className={`min-h-screen relative px-24 py-12 ${inter.className} ${CURSOR_TYPE[tool]}`}
 		>
-			<SideBar toggleColorWindow={toggleColor} setTool={setTool} colorWindow={colorWindow} />
+			<SideBar
+				toggleColorWindow={toggleColor}
+				toggleUploadWindow={toggleUpload}
+				setTool={setTool}
+				colorWindow={colorWindow}
+				uploadWindow={uploadWindow} />
 
 			{
 				colorWindow && <ColorPicker toggleWindow={toggleColor} setColor={setColor} />
 			}
 
 			{
-				uploadWindow && <ColorPicker toggleWindow={toggleColor} setColor={setColor} />
+				uploadWindow && <ImageUploader toggleWindow={toggleColor} setColor={setColor} />
 			}
 
 
@@ -84,6 +106,9 @@ export default function Home() {
 				Color Picker: {colorWindow ? 'true' : 'false'}
 			</div>
 			<div className="flex justify-center">
+				Image Uploader: {uploadWindow ? 'true' : 'false'}
+			</div>
+			<div className="flex justify-center">
 				Dragged Object: {activeDrags}
 			</div>
 			<div className="flex justify-center">
@@ -92,7 +117,10 @@ export default function Home() {
 			<div className="flex justify-center">
 				Place object should active? {placeObject ? 'yes' : 'no'}
 			</div>
-			<div className="absolute top-0 left-0 min-h-screen w-screen" onClick={updatePosition}>
+			<div className="flex justify-center">
+				{markupElements.length} elements
+			</div>
+			<div className="absolute top-0 left-0 min-h-screen w-screen" onMouseDown={makeElement} onMouseMove={updatePosition}>
 				{
 					markupElements.map((element, index) => (
 						<Draggable key={index} onStart={onStart} onStop={onStop} defaultPosition={position}>
