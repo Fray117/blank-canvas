@@ -62,7 +62,7 @@ export default function Home() {
 						...markupElements,
 						{
 							shape: false,
-							class: `${color} h-6 bg-transparent`,
+							class: `${color} bg-transparent`,
 							source: ''
 						}
 					])
