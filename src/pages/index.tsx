@@ -73,7 +73,7 @@ export default function Home() {
 						...markupElements,
 						{
 							shape: true,
-							class: `${color} ${shape === 1 ? 'rounded-full' : ''} h-6 w-6`,
+							class: `${color} ${shape === 1 ? 'rounded-full' : ''} h-full w-full`,
 							source: ''
 						}
 					])
