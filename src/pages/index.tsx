@@ -15,7 +15,7 @@ const CURSOR_TYPE: string[] = [
 	"cursor-crosshair",
 ]
 
-const DEBUG_STATS: boolean = true
+const DEBUG_STATS: boolean = false
 
 export default function Home() {
 	const [tool, setTool] = useState<number>(0)
@@ -42,7 +42,7 @@ export default function Home() {
 			updateElements([
 				...markupElements,
 				{
-					shape: false,
+					shape: true,
 					class: `${color} w-6 h-6`,
 					source: ''
 				}
