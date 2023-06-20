@@ -28,7 +28,7 @@ body {
 }
 
 .react-resizable {
-	@apply relative;
+	@apply fixed;
 }
 
 .react-resizable-handle {
