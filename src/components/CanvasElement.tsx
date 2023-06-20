@@ -18,8 +18,8 @@ export default function CanvasElement({ data, onStart, onStop, position }: {
 }) {
 	const elementRef = useRef(null)
 
-	const [width, setWidth] = useState<number>(300)
-	const [height, setHeight] = useState<number>(300)
+	const [width, setWidth] = useState<number>(100)
+	const [height, setHeight] = useState<number>(100)
 
 	const resizableHandler = (e: any, { node, size, handle }: any) => {
 		setWidth(size.width)
@@ -30,8 +30,8 @@ export default function CanvasElement({ data, onStart, onStop, position }: {
 		<Draggable onStart={onStart} onStop={onStop} defaultPosition={position} nodeRef={elementRef} cancel=".react-resizable-handle">
 			{
 				data.shape ?
-					<Resizable className="fixed" onResize={resizableHandler} height={height} width={width} resizeHandles={['sw', 'se', 'nw', 'ne', 'w', 'e', 'n', 's']}>
-						<div className="box" ref={elementRef} style={{ width: width + 'px', height: height + 'px' }}>
+					<Resizable onResize={resizableHandler} height={height} width={width} resizeHandles={['sw', 'se', 'nw', 'ne', 'w', 'e', 'n', 's']}>
+						<div className="fixed" ref={elementRef} style={{ width: width + 'px', height: height + 'px' }}>
 							{data.source === '' ? <div className={data.class} ></div> : <Image draggable="false" src={data.source} width={width} height={height} alt={''} />}
 						</div>
 					</Resizable> :

@@ -127,29 +127,15 @@ export default function Home() {
 
 			{
 				DEBUG_STATS &&
-				<>
-					<div className="flex justify-center">
-						State: {tool}
-					</div>
-					<div className="flex justify-center">
-						Color Picker: {colorWindow ? 'true' : 'false'}
-					</div>
-					<div className="flex justify-center">
-						Image Uploader: {uploadWindow ? 'true' : 'false'}
-					</div>
-					<div className="flex justify-center">
-						Dragged Object: {activeDrags}
-					</div>
-					<div className="flex justify-center">
-						Target Position: {JSON.stringify(position)}
-					</div>
-					<div className="flex justify-center">
-						Place object should active? {placeObject ? 'yes' : 'no'}
-					</div>
-					<div className="flex justify-center">
-						{markupElements.length} elements
-					</div>
-				</>
+				<div className="fixed right-10">
+					<div>State: {tool}</div>
+					<div>Color Picker: {colorWindow ? 'true' : 'false'}</div>
+					<div>Image Uploader: {uploadWindow ? 'true' : 'false'}</div>
+					<div>Constrained Object: {activeDrags}</div>
+					<div>Place object should active? {placeObject ? 'yes' : 'no'}</div>
+					<div>{JSON.stringify(position)}</div>
+					<div>{markupElements.length} vertices</div>
+				</div>
 			}
 
 			<div className="absolute top-0 left-0 min-h-screen w-screen" onMouseDown={makeElement} onMouseMove={updatePosition} onMouseUp={releaseMouse}>
